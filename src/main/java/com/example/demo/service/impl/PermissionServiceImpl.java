@@ -27,7 +27,7 @@ public class PermissionServiceImpl implements PermissionService {
 
         existing.setPermissionKey(permission.getPermissionKey());
         existing.setDescription(permission.getDescription());
-        existing.setActive(permission.isActive());
+        existing.setActive(permission.getActive()); // ✅ FIX HERE
 
         return repository.save(existing);
     }

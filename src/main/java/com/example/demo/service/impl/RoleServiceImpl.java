@@ -27,7 +27,7 @@ public class RoleServiceImpl implements RoleService {
 
         existing.setRoleName(role.getRoleName());
         existing.setDescription(role.getDescription());
-        existing.setActive(role.isActive());
+        existing.setActive(role.getActive()); // ✅ FIX HERE
 
         return repository.save(existing);
     }
