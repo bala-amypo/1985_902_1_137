@@ -1,27 +1,35 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "user_role")
 public class UserRole {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private UserAccount user;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Role role;
 
-    private Timestamp assignedAt;
+    private LocalDateTime assignedAt;
 
     @PrePersist
-    public void onAssign() {
-        assignedAt = new Timestamp(System.currentTimeMillis());
+    public void prePersist() {
+        assignedAt = LocalDateTime.now();
     }
 
     // getters & setters
+    public Long getId() { return id; }
+
+    public UserAccount getUser() { return user; }
+    public void setUser(UserAccount user) { this.user = user; }
+
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
 }
