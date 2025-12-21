@@ -1,12 +1,3 @@
-package com.example.demo.service.impl;
-
-import com.example.demo.entity.RolePermission;
-import com.example.demo.repository.RolePermissionRepository;
-import com.example.demo.service.RolePermissionService;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
 @Service
 public class RolePermissionServiceImpl implements RolePermissionService {
 
@@ -16,11 +7,19 @@ public class RolePermissionServiceImpl implements RolePermissionService {
         this.repo = repo;
     }
 
-    public RolePermission grant(RolePermission rp) {
+    public RolePermission grantPermission(RolePermission rp) {
         return repo.save(rp);
     }
 
-    public List<RolePermission> getAll() {
+    public List<RolePermission> getPermissionsForRole(Long roleId) {
         return repo.findAll();
+    }
+
+    public RolePermission getMappingById(Long id) {
+        return repo.findById(id).orElse(null);
+    }
+
+    public void revokePermission(Long id) {
+        repo.deleteById(id);
     }
 }

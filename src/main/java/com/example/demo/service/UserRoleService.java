@@ -4,6 +4,12 @@ import com.example.demo.entity.UserRole;
 import java.util.List;
 
 public interface UserRoleService {
-    UserRole assign(UserRole userRole);
-    List<UserRole> getAll();
+
+    UserRole assignRole(UserRole userRole);
+
+    List<UserRole> getRolesForUser(Long userId);
+
+    UserRole getMappingById(Long id);
+
+    void removeRole(Long id);
 }

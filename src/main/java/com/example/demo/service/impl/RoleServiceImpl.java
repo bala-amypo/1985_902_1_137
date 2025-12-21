@@ -1,12 +1,3 @@
-package com.example.demo.service.impl;
-
-import com.example.demo.entity.Role;
-import com.example.demo.repository.RoleRepository;
-import com.example.demo.service.RoleService;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
 @Service
 public class RoleServiceImpl implements RoleService {
 
@@ -16,11 +7,27 @@ public class RoleServiceImpl implements RoleService {
         this.repo = repo;
     }
 
-    public Role create(Role role) {
+    public Role createRole(Role role) {
         return repo.save(role);
     }
 
-    public List<Role> getAll() {
+    public Role updateRole(Long id, Role role) {
+        role.setId(id);
+        return repo.save(role);
+    }
+
+    public Role getRoleById(Long id) {
+        return repo.findById(id).orElse(null);
+    }
+
+    public List<Role> getAllRoles() {
         return repo.findAll();
+    }
+
+    public void deactivateRole(Long id) {
+        repo.findById(id).ifPresent(r -> {
+            r.setActive(false);
+            repo.save(r);
+        });
     }
 }

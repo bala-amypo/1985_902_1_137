@@ -1,12 +1,3 @@
-package com.example.demo.service.impl;
-
-import com.example.demo.entity.UserRole;
-import com.example.demo.repository.UserRoleRepository;
-import com.example.demo.service.UserRoleService;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
 @Service
 public class UserRoleServiceImpl implements UserRoleService {
 
@@ -16,11 +7,19 @@ public class UserRoleServiceImpl implements UserRoleService {
         this.repo = repo;
     }
 
-    public UserRole assign(UserRole userRole) {
+    public UserRole assignRole(UserRole userRole) {
         return repo.save(userRole);
     }
 
-    public List<UserRole> getAll() {
+    public List<UserRole> getRolesForUser(Long userId) {
         return repo.findAll();
+    }
+
+    public UserRole getMappingById(Long id) {
+        return repo.findById(id).orElse(null);
+    }
+
+    public void removeRole(Long id) {
+        repo.deleteById(id);
     }
 }

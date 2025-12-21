@@ -1,12 +1,3 @@
-package com.example.demo.service.impl;
-
-import com.example.demo.entity.Permission;
-import com.example.demo.repository.PermissionRepository;
-import com.example.demo.service.PermissionService;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
 @Service
 public class PermissionServiceImpl implements PermissionService {
 
@@ -16,11 +7,27 @@ public class PermissionServiceImpl implements PermissionService {
         this.repo = repo;
     }
 
-    public Permission create(Permission permission) {
+    public Permission createPermission(Permission permission) {
         return repo.save(permission);
     }
 
-    public List<Permission> getAll() {
+    public Permission updatePermission(Long id, Permission permission) {
+        permission.setId(id);
+        return repo.save(permission);
+    }
+
+    public Permission getPermissionById(Long id) {
+        return repo.findById(id).orElse(null);
+    }
+
+    public List<Permission> getAllPermissions() {
         return repo.findAll();
+    }
+
+    public void deactivatePermission(Long id) {
+        repo.findById(id).ifPresent(p -> {
+            p.setActive(false);
+            repo.save(p);
+        });
     }
 }

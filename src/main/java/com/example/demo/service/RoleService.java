@@ -4,6 +4,14 @@ import com.example.demo.entity.Role;
 import java.util.List;
 
 public interface RoleService {
-    Role create(Role role);
-    List<Role> getAll();
+
+    Role createRole(Role role);
+
+    Role updateRole(Long id, Role role);
+
+    Role getRoleById(Long id);
+
+    List<Role> getAllRoles();
+
+    void deactivateRole(Long id);
 }
