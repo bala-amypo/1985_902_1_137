@@ -1,36 +1,26 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.entity.RolePermission;
+import com.example.demo.repository.RolePermissionRepository;
+import com.example.demo.service.RolePermissionService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
 public class RolePermissionServiceImpl implements RolePermissionService {
 
-    private final RolePermissionRepository rolePermissionRepo;
-    private final RoleRepository roleRepo;
-    private final PermissionRepository permissionRepo;
+    private final RolePermissionRepository repo;
 
-    public RolePermissionServiceImpl(RolePermissionRepository rolePermissionRepo,
-                                     RoleRepository roleRepo,
-                                     PermissionRepository permissionRepo) {
-        this.rolePermissionRepo = rolePermissionRepo;
-        this.roleRepo = roleRepo;
-        this.permissionRepo = permissionRepo;
+    public RolePermissionServiceImpl(RolePermissionRepository repo) {
+        this.repo = repo;
     }
 
-    @Override
-    public RolePermission grantPermission(RolePermission mapping) {
-        return rolePermissionRepo.save(mapping);
+    public RolePermission grant(RolePermission rp) {
+        return repo.save(rp);
     }
 
-    @Override
-    public List<RolePermission> getPermissionsForRole(Long roleId) {
-        return rolePermissionRepo.findByRole_Id(roleId);
-    }
-
-    @Override
-    public RolePermission getMappingById(Long id) {
-        return rolePermissionRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Mapping not found"));
-    }
-
-    @Override
-    public void revokePermission(Long id) {
-        rolePermissionRepo.deleteById(id);
+    public List<RolePermission> getAll() {
+        return repo.findAll();
     }
 }

@@ -1,3 +1,12 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.entity.Permission;
+import com.example.demo.repository.PermissionRepository;
+import com.example.demo.service.PermissionService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
 public class PermissionServiceImpl implements PermissionService {
 
@@ -7,35 +16,11 @@ public class PermissionServiceImpl implements PermissionService {
         this.repo = repo;
     }
 
-    @Override
-    public Permission createPermission(Permission permission) {
-        if (repo.findByPermissionKey(permission.getPermissionKey()) != null)
-            throw new BadRequestException("Permission exists");
+    public Permission create(Permission permission) {
         return repo.save(permission);
     }
 
-    @Override
-    public Permission updatePermission(Long id, Permission permission) {
-        Permission p = getPermissionById(id);
-        p.setDescription(permission.getDescription());
-        return repo.save(p);
-    }
-
-    @Override
-    public Permission getPermissionById(Long id) {
-        return repo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Permission not found"));
-    }
-
-    @Override
-    public List<Permission> getAllPermissions() {
+    public List<Permission> getAll() {
         return repo.findAll();
-    }
-
-    @Override
-    public void deactivatePermission(Long id) {
-        Permission p = getPermissionById(id);
-        p.setActive(false);
-        repo.save(p);
     }
 }

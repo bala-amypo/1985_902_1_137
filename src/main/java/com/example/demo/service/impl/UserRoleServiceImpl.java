@@ -1,36 +1,26 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.entity.UserRole;
+import com.example.demo.repository.UserRoleRepository;
+import com.example.demo.service.UserRoleService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
 public class UserRoleServiceImpl implements UserRoleService {
 
-    private final UserRoleRepository userRoleRepo;
-    private final UserAccountRepository userRepo;
-    private final RoleRepository roleRepo;
+    private final UserRoleRepository repo;
 
-    public UserRoleServiceImpl(UserRoleRepository userRoleRepo,
-                               UserAccountRepository userRepo,
-                               RoleRepository roleRepo) {
-        this.userRoleRepo = userRoleRepo;
-        this.userRepo = userRepo;
-        this.roleRepo = roleRepo;
+    public UserRoleServiceImpl(UserRoleRepository repo) {
+        this.repo = repo;
     }
 
-    @Override
-    public UserRole assignRole(UserRole mapping) {
-        return userRoleRepo.save(mapping);
+    public UserRole assign(UserRole userRole) {
+        return repo.save(userRole);
     }
 
-    @Override
-    public List<UserRole> getRolesForUser(Long userId) {
-        return userRoleRepo.findByUser_Id(userId);
-    }
-
-    @Override
-    public UserRole getMappingById(Long id) {
-        return userRoleRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Mapping not found"));
-    }
-
-    @Override
-    public void removeRole(Long id) {
-        userRoleRepo.deleteById(id);
+    public List<UserRole> getAll() {
+        return repo.findAll();
     }
 }
