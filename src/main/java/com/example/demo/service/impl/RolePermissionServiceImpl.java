@@ -1,25 +1,38 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.entity.RolePermission;
+import com.example.demo.repository.RolePermissionRepository;
+import com.example.demo.service.RolePermissionService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
 public class RolePermissionServiceImpl implements RolePermissionService {
 
-    private final RolePermissionRepository repo;
+    private final RolePermissionRepository repository;
 
-    public RolePermissionServiceImpl(RolePermissionRepository repo) {
-        this.repo = repo;
+    public RolePermissionServiceImpl(RolePermissionRepository repository) {
+        this.repository = repository;
     }
 
-    public RolePermission grantPermission(RolePermission rp) {
-        return repo.save(rp);
+    @Override
+    public RolePermission grantPermission(RolePermission rolePermission) {
+        return repository.save(rolePermission);
     }
 
+    @Override
     public List<RolePermission> getPermissionsForRole(Long roleId) {
-        return repo.findAll();
+        return repository.findAll();
     }
 
+    @Override
     public RolePermission getMappingById(Long id) {
-        return repo.findById(id).orElse(null);
+        return repository.findById(id).orElseThrow();
     }
 
+    @Override
     public void revokePermission(Long id) {
-        repo.deleteById(id);
+        repository.deleteById(id);
     }
 }

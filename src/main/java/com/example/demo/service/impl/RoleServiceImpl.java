@@ -23,8 +23,13 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role updateRole(Long id, Role role) {
-        role.setId(id);
-        return repository.save(role);
+        Role existing = repository.findById(id).orElseThrow();
+
+        existing.setRoleName(role.getRoleName());
+        existing.setDescription(role.getDescription());
+        existing.setActive(role.isActive());
+
+        return repository.save(existing);
     }
 
     @Override

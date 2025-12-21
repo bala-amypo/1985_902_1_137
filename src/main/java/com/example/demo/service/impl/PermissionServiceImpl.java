@@ -23,8 +23,13 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public Permission updatePermission(Long id, Permission permission) {
-        permission.setId(id);
-        return repository.save(permission);
+        Permission existing = repository.findById(id).orElseThrow();
+
+        existing.setPermissionKey(permission.getPermissionKey());
+        existing.setDescription(permission.getDescription());
+        existing.setActive(permission.isActive());
+
+        return repository.save(existing);
     }
 
     @Override
