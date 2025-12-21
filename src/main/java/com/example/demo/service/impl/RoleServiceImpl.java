@@ -1,33 +1,46 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.entity.Role;
+import com.example.demo.repository.RoleRepository;
+import com.example.demo.service.RoleService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
 public class RoleServiceImpl implements RoleService {
 
-    private final RoleRepository repo;
+    private final RoleRepository repository;
 
-    public RoleServiceImpl(RoleRepository repo) {
-        this.repo = repo;
+    public RoleServiceImpl(RoleRepository repository) {
+        this.repository = repository;
     }
 
+    @Override
     public Role createRole(Role role) {
-        return repo.save(role);
+        return repository.save(role);
     }
 
+    @Override
     public Role updateRole(Long id, Role role) {
         role.setId(id);
-        return repo.save(role);
+        return repository.save(role);
     }
 
+    @Override
     public Role getRoleById(Long id) {
-        return repo.findById(id).orElse(null);
+        return repository.findById(id).orElseThrow();
     }
 
+    @Override
     public List<Role> getAllRoles() {
-        return repo.findAll();
+        return repository.findAll();
     }
 
+    @Override
     public void deactivateRole(Long id) {
-        repo.findById(id).ifPresent(r -> {
-            r.setActive(false);
-            repo.save(r);
-        });
+        Role role = repository.findById(id).orElseThrow();
+        role.setActive(false);
+        repository.save(role);
     }
 }
