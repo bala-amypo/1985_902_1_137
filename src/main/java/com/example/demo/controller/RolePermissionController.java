@@ -23,25 +23,25 @@ public class RolePermissionController {
 
     @PostMapping
     @Operation(summary = "Assign permission to role")
-    public RolePermission create(@RequestBody RolePermission rolePermission) {
-        return rolePermissionService.save(rolePermission);
+    public RolePermission assign(@RequestBody RolePermission rolePermission) {
+        return rolePermissionService.assignPermission(rolePermission);
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get role-permission by ID")
+    @Operation(summary = "Get role-permission mapping by ID")
     public RolePermission getById(@PathVariable Long id) {
-        return rolePermissionService.getById(id);
+        return rolePermissionService.getMappingById(id);
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Remove role-permission")
-    public void delete(@PathVariable Long id) {
-        rolePermissionService.deleteById(id);
+    @Operation(summary = "Remove role-permission mapping")
+    public void remove(@PathVariable Long id) {
+        rolePermissionService.removePermission(id);
     }
 
     @GetMapping("/role/{roleId}")
-    @Operation(summary = "Get permissions by role ID")
+    @Operation(summary = "Get permissions for role")
     public List<RolePermission> getByRole(@PathVariable Long roleId) {
-        return rolePermissionService.getByRoleId(roleId);
+        return rolePermissionService.getPermissionsForRole(roleId);
     }
 }

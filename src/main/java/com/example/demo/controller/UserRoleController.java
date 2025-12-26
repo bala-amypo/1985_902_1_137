@@ -23,14 +23,14 @@ public class UserRoleController {
 
     @PostMapping
     @Operation(summary = "Assign role to user")
-    public UserRole create(@RequestBody UserRole userRole) {
+    public UserRole assign(@RequestBody UserRole userRole) {
         return userRoleService.assignRole(userRole);
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get user-role by ID")
+    @Operation(summary = "Get user-role mapping by ID")
     public UserRole getById(@PathVariable Long id) {
-        return userRoleService.getById(id);
+        return userRoleService.getMappingById(id);
     }
 
     @GetMapping("/user/{userId}")
@@ -41,7 +41,7 @@ public class UserRoleController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Remove role from user")
-    public void delete(@PathVariable Long id) {
+    public void remove(@PathVariable Long id) {
         userRoleService.removeRole(id);
     }
 }
