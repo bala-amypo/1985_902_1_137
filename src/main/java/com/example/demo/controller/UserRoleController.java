@@ -1,6 +1,20 @@
+package com.example.demo.controller;
+
+import java.util.List;
+
+import org.springframework.web.bind.annotation.*;
+
+import com.example.demo.entity.UserRole;
+import com.example.demo.service.UserRoleService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/user-roles")
-@Tag(name = "user-role-controller")
+@Tag(name = "user-role-controller", description = "User Role APIs")
 public class UserRoleController {
 
     private final UserRoleService userRoleService;
