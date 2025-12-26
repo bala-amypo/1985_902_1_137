@@ -10,6 +10,18 @@ public class AuthServiceImpl implements AuthService {
     public AuthServiceImpl(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
+    public AuthServiceImpl(
+        UserAccountRepository userAccountRepository,
+        PasswordEncoder passwordEncoder,
+        AuthenticationManager authenticationManager,
+        JwtUtil jwtUtil
+) {
+    this.userAccountRepository = userAccountRepository;
+    this.passwordEncoder = passwordEncoder;
+    this.authenticationManager = authenticationManager;
+    this.jwtUtil = jwtUtil;
+}
+
 
     @Override
     public String login(String email, String password) {

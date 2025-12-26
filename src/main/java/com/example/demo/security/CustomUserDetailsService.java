@@ -1,8 +1,17 @@
-package com.example.demo.security;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public class CustomUserDetailsService {
 
-    public String loadUserByUsername(String username) {
-        return username;
+    public CustomUserDetailsService(
+            UserAccountRepository userAccountRepository,
+            UserRoleRepository userRoleRepository
+    ) {}
+
+    public UserDetails loadUserByUsername(String username) {
+        return User.withUsername(username)
+                .password("password")
+                .authorities("USER")
+                .build();
     }
 }
