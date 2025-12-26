@@ -10,9 +10,26 @@ public class RolePermission {
     @GeneratedValue
     private Long id;
 
+    @ManyToOne
+    private Role role;
+
+    @ManyToOne
+    private Permission permission;
+
     private LocalDateTime grantedAt;
 
+    public RolePermission() {}
+
+    public Long getId() { return id; }
     public void setId(long id) { this.id = id; }
+
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
+
+    public Permission getPermission() { return permission; }
+    public void setPermission(Permission permission) {
+        this.permission = permission;
+    }
 
     public void prePersist() {
         this.grantedAt = LocalDateTime.now();
