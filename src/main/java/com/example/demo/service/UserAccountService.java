@@ -1,11 +1,6 @@
-package com.example.demo.service;
-
-import com.example.demo.entity.UserAccount;
-import java.util.List;
-
 public interface UserAccountService {
     UserAccount create(UserAccount user);
-    UserAccount getById(Long id);
+    UserAccount get(Long id);
     List<UserAccount> getAll();
     void deactivate(Long id);
 }
