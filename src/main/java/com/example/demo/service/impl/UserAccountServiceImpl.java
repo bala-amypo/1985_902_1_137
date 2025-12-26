@@ -13,12 +13,12 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     private final UserAccountRepository repository;
 
-    // REQUIRED by Spring context
+    // Required by Spring
     public UserAccountServiceImpl() {
         this.repository = null;
     }
 
-    // REQUIRED by TEST CASE (constructor injection)
+    // Required by test cases
     public UserAccountServiceImpl(UserAccountRepository repository) {
         this.repository = repository;
     }
@@ -33,7 +33,32 @@ public class UserAccountServiceImpl implements UserAccountService {
         return repository.findById(id);
     }
 
-    // 🔴 MISSING METHOD → NOW IMPLEMENTED
+    @Override
+    public UserAccount getUserById(Long id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    @Override
+    public UserAccount updateUser(Long id, UserAccount updatedUser) {
+        UserAccount existing = repository.findById(id).orElse(null);
+        if (existing == null) {
+            return null;
+        }
+
+        existing.setFullName(updatedUser.getFullName());
+        existing.setEmail(updatedUser.getEmail());
+        return repository.save(existing);
+    }
+
+    @Override
+    public void deactivateUser(Long id) {
+        UserAccount user = repository.findById(id).orElse(null);
+        if (user != null) {
+            user.setActive(false);
+            repository.save(user);
+        }
+    }
+
     @Override
     public List<UserAccount> getAllUsers() {
         return repository.findAll();
