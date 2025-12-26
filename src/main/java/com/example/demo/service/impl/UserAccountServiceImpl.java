@@ -1,30 +1,33 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.entity.UserAccount;
+import com.example.demo.service.UserAccountService;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class UserAccountServiceImpl implements UserAccountService {
 
-    private final UserAccountRepository repo;
+    private final List<UserAccount> users = new ArrayList<>();
 
-    public UserAccountServiceImpl(UserAccountRepository repo) {
-        this.repo = repo;
+    @Override
+    public UserAccount createUser(UserAccount user) {
+        users.add(user);
+        return user;
     }
 
-    public UserAccount create(UserAccount user) {
-        if (repo.existsByEmail(user.getEmail()))
-            throw new BadRequestException("Email exists");
-        return repo.save(user);
+    @Override
+    public UserAccount getUserById(Long id) {
+        return users.stream()
+                .filter(u -> u.getId() != null && u.getId().equals(id))
+                .findFirst()
+                .orElse(null);
     }
 
-    public UserAccount get(Long id) {
-        return repo.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-    }
-
-    public List<UserAccount> getAll() {
-        return repo.findAll();
-    }
-
-    public void deactivate(Long id) {
-        UserAccount u = get(id);
-        u.setActive(false);
-        repo.save(u);
+    @Override
+    public List<UserAccount> getAllUsers() {
+        return users;
     }
 }
