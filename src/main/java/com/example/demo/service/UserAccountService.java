@@ -11,5 +11,11 @@ public interface UserAccountService {
 
     Optional<UserAccount> getUser(Long id);
 
-    List<UserAccount> getAllUsers();   // 🔴 REQUIRED BY TEST
+    UserAccount getUserById(Long id);          // 🔴 REQUIRED
+
+    UserAccount updateUser(Long id, UserAccount user); // 🔴 REQUIRED
+
+    void deactivateUser(Long id);              // 🔴 REQUIRED
+
+    List<UserAccount> getAllUsers();
 }
