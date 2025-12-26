@@ -18,7 +18,6 @@ public class UserAccountServiceImpl implements UserAccountService {
         this.userAccountRepository = userAccountRepository;
     }
 
-    // ================= CREATE =================
     @Override
     public UserAccount createUser(UserAccount user) {
         if (userAccountRepository.existsByEmail(user.getEmail())) {
@@ -28,7 +27,6 @@ public class UserAccountServiceImpl implements UserAccountService {
         return userAccountRepository.save(user);
     }
 
-    // ================= UPDATE =================
     @Override
     public UserAccount updateUser(Long id, UserAccount user) {
         UserAccount existing = userAccountRepository.findById(id)
@@ -36,28 +34,28 @@ public class UserAccountServiceImpl implements UserAccountService {
 
         existing.setEmail(user.getEmail());
         existing.setFullName(user.getFullName());
-
         return userAccountRepository.save(existing);
     }
 
-    // ================= GET BY ID =================
     @Override
     public UserAccount getUser(Long id) {
         return userAccountRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
-    // ================= DEACTIVATE =================
+    // ✅ REQUIRED BY TEST CASES
+    @Override
+    public UserAccount getUserById(Long id) {
+        return getUser(id); // delegate to main logic
+    }
+
     @Override
     public void deactivateUser(Long id) {
-        UserAccount user = userAccountRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
+        UserAccount user = getUser(id);
         user.setActive(false);
         userAccountRepository.save(user);
     }
 
-    // ================= GET ALL =================
     @Override
     public List<UserAccount> getAllUsers() {
         return userAccountRepository.findAll();
