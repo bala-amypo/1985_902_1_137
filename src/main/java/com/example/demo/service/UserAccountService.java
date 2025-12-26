@@ -7,6 +7,10 @@ public interface UserAccountService {
 
     UserAccount createUser(UserAccount user);
 
+    UserAccount updateUser(Long id, UserAccount user);
+
+    void deactivateUser(Long id);
+
     UserAccount getUserById(Long id);
 
     List<UserAccount> getAllUsers();

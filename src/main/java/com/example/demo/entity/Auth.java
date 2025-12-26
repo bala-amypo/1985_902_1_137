@@ -1,35 +1,43 @@
-package com.example.demo.controller;
+package com.example.demo.entity;
 
-import com.example.demo.dto.AuthRequestDto;
-import com.example.demo.dto.AuthResponseDto;
-import com.example.demo.dto.RegisterRequestDto;
-import com.example.demo.service.AuthService;
-import org.springframework.web.bind.annotation.*;
+import jakarta.persistence.*;
 
-@RestController
-@RequestMapping("/auth")
-public class AuthController {
+@Entity
+@Table(name = "auth")
+public class Auth {
 
-    private final AuthService authService;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    // ✅ Constructor Injection (MANDATORY for tests)
-    public AuthController(AuthService authService) {
-        this.authService = authService;
+    private String username;
+    private String password;
+
+    public Auth() {
     }
 
-    // =========================
-    // LOGIN
-    // =========================
-    @PostMapping("/login")
-    public AuthResponseDto login(@RequestBody AuthRequestDto request) {
-        return authService.login(request);
+    public Auth(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
-    // =========================
-    // REGISTER
-    // =========================
-    @PostMapping("/register")
-    public void register(@RequestBody RegisterRequestDto request) {
-        authService.register(request);
+    public Long getId() {
+        return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

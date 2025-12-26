@@ -19,6 +19,28 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
 
     @Override
+    public UserAccount updateUser(Long id, UserAccount updatedUser) {
+        for (UserAccount user : users) {
+            if (user.getId() != null && user.getId().equals(id)) {
+                user.setEmail(updatedUser.getEmail());
+                user.setFullName(updatedUser.getFullName());
+                return user;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void deactivateUser(Long id) {
+        for (UserAccount user : users) {
+            if (user.getId() != null && user.getId().equals(id)) {
+                user.setActive(false);
+                return;
+            }
+        }
+    }
+
+    @Override
     public UserAccount getUserById(Long id) {
         return users.stream()
                 .filter(u -> u.getId() != null && u.getId().equals(id))
