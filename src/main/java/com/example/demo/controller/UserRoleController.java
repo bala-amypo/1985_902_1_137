@@ -2,14 +2,12 @@ package com.example.demo.controller;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.*;
-
 import com.example.demo.entity.UserRole;
 import com.example.demo.service.UserRoleService;
 
+import org.springframework.web.bind.annotation.*;
+
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -25,29 +23,25 @@ public class UserRoleController {
 
     @PostMapping
     @Operation(summary = "Assign role to user")
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-        required = true,
-        content = @Content(schema = @Schema(implementation = UserRole.class))
-    )
-    public UserRole assignRole(@RequestBody UserRole userRole) {
+    public UserRole assign(@RequestBody UserRole userRole) {
         return userRoleService.assignRole(userRole);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get user-role mapping by ID")
-    public UserRole getMapping(@PathVariable Long id) {
+    public UserRole getById(@PathVariable Long id) {
         return userRoleService.getMappingById(id);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Remove role from user")
-    public void removeRole(@PathVariable Long id) {
+    public void remove(@PathVariable Long id) {
         userRoleService.removeRole(id);
     }
 
     @GetMapping("/user/{userId}")
-    @Operation(summary = "Get roles for a user")
-    public List<UserRole> getRolesForUser(@PathVariable Long userId) {
+    @Operation(summary = "Get roles for user")
+    public List<UserRole> getByUser(@PathVariable Long userId) {
         return userRoleService.getRolesForUser(userId);
     }
 }

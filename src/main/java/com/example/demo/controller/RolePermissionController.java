@@ -1,6 +1,18 @@
+package com.example.demo.controller;
+
+import java.util.List;
+
+import com.example.demo.entity.RolePermission;
+import com.example.demo.service.RolePermissionService;
+
+import org.springframework.web.bind.annotation.*;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/role-permissions")
-@Tag(name = "role-permission-controller")
+@Tag(name = "role-permission-controller", description = "Role Permission APIs")
 public class RolePermissionController {
 
     private final RolePermissionService rolePermissionService;
@@ -11,29 +23,25 @@ public class RolePermissionController {
 
     @PostMapping
     @Operation(summary = "Assign permission to role")
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-        required = true,
-        content = @Content(schema = @Schema(implementation = RolePermission.class))
-    )
-    public RolePermission assignPermission(@RequestBody RolePermission rolePermission) {
+    public RolePermission assign(@RequestBody RolePermission rolePermission) {
         return rolePermissionService.assignPermission(rolePermission);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get role-permission mapping by ID")
-    public RolePermission getMapping(@PathVariable Long id) {
+    public RolePermission getById(@PathVariable Long id) {
         return rolePermissionService.getMappingById(id);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Remove permission from role")
-    public void removePermission(@PathVariable Long id) {
+    public void remove(@PathVariable Long id) {
         rolePermissionService.removePermission(id);
     }
 
     @GetMapping("/role/{roleId}")
     @Operation(summary = "Get permissions for role")
-    public List<RolePermission> getPermissionsForRole(@PathVariable Long roleId) {
+    public List<RolePermission> getByRole(@PathVariable Long roleId) {
         return rolePermissionService.getPermissionsForRole(roleId);
     }
 }
