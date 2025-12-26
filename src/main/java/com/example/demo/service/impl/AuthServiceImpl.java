@@ -1,12 +1,16 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.dto.AuthRequestDto;
 import com.example.demo.dto.AuthResponseDto;
 import com.example.demo.dto.RegisterRequestDto;
 import com.example.demo.entity.UserAccount;
+import com.example.demo.exception.BadRequestException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.security.JwtUtil;
 import com.example.demo.service.AuthService;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +22,7 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
-    // 🔹 REQUIRED no-args constructor (Spring + tests)
+    // 🔹 REQUIRED for Spring
     public AuthServiceImpl() {
         this.userAccountRepository = null;
         this.passwordEncoder = null;
@@ -26,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
         this.jwtUtil = null;
     }
 
-    // 🔹 REQUIRED constructor used by tests
+    // 🔹 REQUIRED for tests
     public AuthServiceImpl(UserAccountRepository userAccountRepository,
                            PasswordEncoder passwordEncoder,
                            AuthenticationManager authenticationManager,
@@ -37,11 +41,14 @@ public class AuthServiceImpl implements AuthService {
         this.jwtUtil = jwtUtil;
     }
 
+    // =========================================================
+    // REGISTER
+    // =========================================================
     @Override
     public AuthResponseDto register(RegisterRequestDto request) {
 
         if (userAccountRepository.existsByEmail(request.getEmail())) {
-            return new AuthResponseDto(null);
+            throw new BadRequestException("Email already exists");
         }
 
         UserAccount user = new UserAccount();
@@ -51,6 +58,26 @@ public class AuthServiceImpl implements AuthService {
         user.setActive(true);
 
         userAccountRepository.save(user);
+
+        String token = jwtUtil.generateToken(user.getEmail());
+        return new AuthResponseDto(token);
+    }
+
+    // =========================================================
+    // LOGIN  🔴 THIS FIXES THE FINAL ERROR
+    // =========================================================
+    @Override
+    public AuthResponseDto login(AuthRequestDto request) {
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+
+        UserAccount user = userAccountRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         String token = jwtUtil.generateToken(user.getEmail());
         return new AuthResponseDto(token);
