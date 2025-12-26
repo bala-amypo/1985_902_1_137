@@ -1,21 +1,21 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.UserAccount;
-
 import java.util.List;
-import java.util.Optional;
 
 public interface UserAccountService {
 
     UserAccount createUser(UserAccount user);
 
-    Optional<UserAccount> getUser(Long id);
+    UserAccount updateUser(Long id, UserAccount user);
 
-    UserAccount getUserById(Long id);          // 🔴 REQUIRED
+    // ❌ WRONG (remove this)
+    // Optional<UserAccount> getUser(Long id);
 
-    UserAccount updateUser(Long id, UserAccount user); // 🔴 REQUIRED
+    // ✅ CORRECT
+    UserAccount getUser(Long id);
 
-    void deactivateUser(Long id);              // 🔴 REQUIRED
+    void deactivateUser(Long id);
 
     List<UserAccount> getAllUsers();
 }
