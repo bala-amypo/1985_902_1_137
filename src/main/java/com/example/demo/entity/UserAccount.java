@@ -1,23 +1,23 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
+@Table(name = "user_account")
 public class UserAccount {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String email;
     private String password;
     private String fullName;
-
     private boolean active = true;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private Instant createdAt;
+    private Instant updatedAt;
 
     public UserAccount() {}
 
@@ -36,15 +36,17 @@ public class UserAccount {
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
 
+    @PrePersist
     public void prePersist() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = createdAt;
+        this.createdAt = Instant.now();
+        this.updatedAt = this.createdAt;
     }
 
+    @PreUpdate
     public void preUpdate() {
-        this.updatedAt = LocalDateTime.now();
+        this.updatedAt = Instant.now();
     }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public Instant getCreatedAt() { return createdAt; }
+    public Instant getUpdatedAt() { return updatedAt; }
 }
