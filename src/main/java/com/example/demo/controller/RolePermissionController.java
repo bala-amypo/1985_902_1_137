@@ -1,13 +1,6 @@
-package com.example.demo.controller;
-
-import com.example.demo.entity.RolePermission;
-import com.example.demo.service.RolePermissionService;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/role-permissions")
+@Tag(name = "role-permission-controller")
 public class RolePermissionController {
 
     private final RolePermissionService rolePermissionService;
@@ -17,22 +10,30 @@ public class RolePermissionController {
     }
 
     @PostMapping
-    public RolePermission grantPermission(@RequestBody RolePermission mapping) {
-        return rolePermissionService.grantPermission(mapping);
-    }
-
-    @GetMapping("/role/{roleId}")
-    public List<RolePermission> getPermissionsForRole(@PathVariable Long roleId) {
-        return rolePermissionService.getPermissionsForRole(roleId);
+    @Operation(summary = "Assign permission to role")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        required = true,
+        content = @Content(schema = @Schema(implementation = RolePermission.class))
+    )
+    public RolePermission assignPermission(@RequestBody RolePermission rolePermission) {
+        return rolePermissionService.assignPermission(rolePermission);
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get role-permission mapping by ID")
     public RolePermission getMapping(@PathVariable Long id) {
         return rolePermissionService.getMappingById(id);
     }
 
     @DeleteMapping("/{id}")
-    public void revokePermission(@PathVariable Long id) {
-        rolePermissionService.revokePermission(id);
+    @Operation(summary = "Remove permission from role")
+    public void removePermission(@PathVariable Long id) {
+        rolePermissionService.removePermission(id);
+    }
+
+    @GetMapping("/role/{roleId}")
+    @Operation(summary = "Get permissions for role")
+    public List<RolePermission> getPermissionsForRole(@PathVariable Long roleId) {
+        return rolePermissionService.getPermissionsForRole(roleId);
     }
 }
