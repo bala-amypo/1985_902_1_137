@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/role-permissions")
-@Tag(name = "role-permission-controller", description = "Role Permission APIs")
+@Tag(name = "role-permission-controller")
 public class RolePermissionController {
 
     private final RolePermissionService rolePermissionService;
@@ -21,27 +21,31 @@ public class RolePermissionController {
         this.rolePermissionService = rolePermissionService;
     }
 
+    // POST /api/role-permissions
     @PostMapping
     @Operation(summary = "Assign permission to role")
-    public RolePermission assign(@RequestBody RolePermission rolePermission) {
-        return rolePermissionService.assignPermission(rolePermission);
+    public RolePermission create(@RequestBody RolePermission rolePermission) {
+        return rolePermissionService.save(rolePermission);
     }
 
+    // GET /api/role-permissions/{id}
     @GetMapping("/{id}")
-    @Operation(summary = "Get role-permission mapping by ID")
+    @Operation(summary = "Get role-permission by ID")
     public RolePermission getById(@PathVariable Long id) {
-        return rolePermissionService.getMappingById(id);
+        return rolePermissionService.getById(id);
     }
 
+    // DELETE /api/role-permissions/{id}
     @DeleteMapping("/{id}")
-    @Operation(summary = "Remove permission from role")
-    public void remove(@PathVariable Long id) {
-        rolePermissionService.removePermission(id);
+    @Operation(summary = "Remove role-permission")
+    public void delete(@PathVariable Long id) {
+        rolePermissionService.deleteById(id);
     }
 
+    // GET /api/role-permissions/role/{roleId}
     @GetMapping("/role/{roleId}")
-    @Operation(summary = "Get permissions for role")
+    @Operation(summary = "Get permissions by role ID")
     public List<RolePermission> getByRole(@PathVariable Long roleId) {
-        return rolePermissionService.getPermissionsForRole(roleId);
+        return rolePermissionService.getByRoleId(roleId);
     }
 }
