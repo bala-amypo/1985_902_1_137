@@ -5,17 +5,15 @@ import com.example.demo.dto.AuthResponseDto;
 import com.example.demo.dto.RegisterRequestDto;
 import com.example.demo.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-@Tag(name = "auth-controller", description = "Authentication APIs")
 public class AuthController {
 
     private final AuthService authService;
@@ -24,49 +22,56 @@ public class AuthController {
         this.authService = authService;
     }
 
-    // ================= LOGIN =================
-
-    @Operation(
-            summary = "User Login",
-            description = "Authenticate user and return JWT token"
-    )
-    @ApiResponse(
-            responseCode = "200",
-            description = "Login successful",
-            content = @Content(schema = @Schema(implementation = AuthResponseDto.class))
-    )
+    // =====================================================
+    // LOGIN
+    // =====================================================
     @PostMapping("/login")
+    @Operation(summary = "User Login")
     public ResponseEntity<AuthResponseDto> login(
+            @Parameter(description = "Email", example = "user@example.com")
+            @RequestParam(required = false) String email,
+
+            @Parameter(description = "Password", example = "password")
+            @RequestParam(required = false) String password,
+
             @RequestBody(
-                    description = "Login credentials",
                     required = true,
-                    content = @Content(schema = @Schema(implementation = AuthRequestDto.class))
+                    description = "Login credentials",
+                    content = @Content(
+                            schema = @Schema(implementation = AuthRequestDto.class)
+                    )
             )
-            @org.springframework.web.bind.annotation.RequestBody AuthRequestDto request
+            @org.springframework.web.bind.annotation.RequestBody AuthRequestDto body
     ) {
-        return ResponseEntity.ok(authService.login(request));
+        // IMPORTANT: Tests expect login(AuthRequestDto)
+        return ResponseEntity.ok(authService.login(body));
     }
 
-    // ================= REGISTER =================
-
-    @Operation(
-            summary = "User Registration",
-            description = "Register a new user"
-    )
-    @ApiResponse(
-            responseCode = "200",
-            description = "User registered successfully"
-    )
+    // =====================================================
+    // REGISTER
+    // =====================================================
     @PostMapping("/register")
-    public ResponseEntity<String> register(
+    @Operation(summary = "User Registration")
+    public ResponseEntity<AuthResponseDto> register(
+            @Parameter(description = "Email", example = "newuser@example.com")
+            @RequestParam(required = false) String email,
+
+            @Parameter(description = "Full Name", example = "John Doe")
+            @RequestParam(required = false) String fullName,
+
+            @Parameter(description = "Password", example = "password123")
+            @RequestParam(required = false) String password,
+
             @RequestBody(
-                    description = "Registration details",
                     required = true,
-                    content = @Content(schema = @Schema(implementation = RegisterRequestDto.class))
+                    description = "Registration details",
+                    content = @Content(
+                            schema = @Schema(implementation = RegisterRequestDto.class)
+                    )
             )
-            @org.springframework.web.bind.annotation.RequestBody RegisterRequestDto request
+            @org.springframework.web.bind.annotation.RequestBody RegisterRequestDto body
     ) {
-        authService.register(request);
-        return ResponseEntity.ok("User registered successfully");
+        // IMPORTANT: Tests expect register(RegisterRequestDto)
+        return ResponseEntity.ok(authService.register(body));
     }
 }
