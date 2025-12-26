@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.Instant;
 
 @Entity
 public class UserAccount {
@@ -14,22 +13,16 @@ public class UserAccount {
     private String email;
 
     private String fullName;
-
     private boolean active = true;
 
-    private Instant createdAt;
-    private Instant updatedAt;
+    public Long getId() { return id; }
 
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = Instant.now();
-        this.updatedAt = Instant.now();
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    @PreUpdate
-    public void preUpdate() {
-        this.updatedAt = Instant.now();
-    }
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
 
-    // getters & setters
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 }
