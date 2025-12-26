@@ -12,13 +12,19 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/roles")
-@Tag(name = "role-controller", description = "Role APIs")
+@Tag(name = "role-controller")
 public class RoleController {
 
     private final RoleService roleService;
 
     public RoleController(RoleService roleService) {
         this.roleService = roleService;
+    }
+
+    @PostMapping
+    @Operation(summary = "Create role")
+    public Role create(@RequestBody Role role) {
+        return roleService.createRole(role);
     }
 
     @GetMapping("/{id}")
@@ -33,15 +39,11 @@ public class RoleController {
         return roleService.getAllRoles();
     }
 
-    @PostMapping
-    @Operation(summary = "Create role")
-    public Role create(@RequestBody Role role) {
-        return roleService.createRole(role);
-    }
-
     @PutMapping("/{id}")
     @Operation(summary = "Update role")
-    public Role update(@PathVariable Long id, @RequestBody Role role) {
+    public Role update(
+            @PathVariable Long id,
+            @RequestBody Role role) {
         return roleService.updateRole(id, role);
     }
 

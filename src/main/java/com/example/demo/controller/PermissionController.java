@@ -12,13 +12,19 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/permissions")
-@Tag(name = "permission-controller", description = "Permission APIs")
+@Tag(name = "permission-controller")
 public class PermissionController {
 
     private final PermissionService permissionService;
 
     public PermissionController(PermissionService permissionService) {
         this.permissionService = permissionService;
+    }
+
+    @PostMapping
+    @Operation(summary = "Create permission")
+    public Permission create(@RequestBody Permission permission) {
+        return permissionService.createPermission(permission);
     }
 
     @GetMapping("/{id}")
@@ -31,18 +37,6 @@ public class PermissionController {
     @Operation(summary = "Get all permissions")
     public List<Permission> getAll() {
         return permissionService.getAllPermissions();
-    }
-
-    @PostMapping
-    @Operation(summary = "Create permission")
-    public Permission create(@RequestBody Permission permission) {
-        return permissionService.createPermission(permission);
-    }
-
-    @PutMapping("/{id}")
-    @Operation(summary = "Update permission")
-    public Permission update(@PathVariable Long id, @RequestBody Permission permission) {
-        return permissionService.updatePermission(id, permission);
     }
 
     @PutMapping("/{id}/deactivate")

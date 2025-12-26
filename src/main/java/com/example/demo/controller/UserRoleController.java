@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/user-roles")
-@Tag(name = "user-role-controller", description = "User Role APIs")
+@Tag(name = "user-role-controller")
 public class UserRoleController {
 
     private final UserRoleService userRoleService;
@@ -23,25 +23,25 @@ public class UserRoleController {
 
     @PostMapping
     @Operation(summary = "Assign role to user")
-    public UserRole assign(@RequestBody UserRole userRole) {
+    public UserRole create(@RequestBody UserRole userRole) {
         return userRoleService.assignRole(userRole);
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get user-role mapping by ID")
+    @Operation(summary = "Get user-role by ID")
     public UserRole getById(@PathVariable Long id) {
-        return userRoleService.getMappingById(id);
-    }
-
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Remove role from user")
-    public void remove(@PathVariable Long id) {
-        userRoleService.removeRole(id);
+        return userRoleService.getById(id);
     }
 
     @GetMapping("/user/{userId}")
     @Operation(summary = "Get roles for user")
     public List<UserRole> getByUser(@PathVariable Long userId) {
         return userRoleService.getRolesForUser(userId);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Remove role from user")
+    public void delete(@PathVariable Long id) {
+        userRoleService.removeRole(id);
     }
 }

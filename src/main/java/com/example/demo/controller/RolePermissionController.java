@@ -21,28 +21,24 @@ public class RolePermissionController {
         this.rolePermissionService = rolePermissionService;
     }
 
-    // POST /api/role-permissions
     @PostMapping
     @Operation(summary = "Assign permission to role")
     public RolePermission create(@RequestBody RolePermission rolePermission) {
         return rolePermissionService.save(rolePermission);
     }
 
-    // GET /api/role-permissions/{id}
     @GetMapping("/{id}")
     @Operation(summary = "Get role-permission by ID")
     public RolePermission getById(@PathVariable Long id) {
         return rolePermissionService.getById(id);
     }
 
-    // DELETE /api/role-permissions/{id}
     @DeleteMapping("/{id}")
     @Operation(summary = "Remove role-permission")
     public void delete(@PathVariable Long id) {
         rolePermissionService.deleteById(id);
     }
 
-    // GET /api/role-permissions/role/{roleId}
     @GetMapping("/role/{roleId}")
     @Operation(summary = "Get permissions by role ID")
     public List<RolePermission> getByRole(@PathVariable Long roleId) {
