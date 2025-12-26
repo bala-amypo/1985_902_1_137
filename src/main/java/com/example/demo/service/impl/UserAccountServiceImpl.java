@@ -20,23 +20,17 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     public UserAccount createUser(UserAccount user) {
-
-        // ✅ MUST throw before save
         if (userAccountRepository.existsByEmail(user.getEmail())) {
             throw new BadRequestException("User with email already exists");
         }
-
         user.setActive(true);
         return userAccountRepository.save(user);
     }
 
     @Override
     public UserAccount updateUser(Long id, UserAccount updatedUser) {
-
-        // ✅ FORCE exception
         UserAccount existing = userAccountRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         existing.setEmail(updatedUser.getEmail());
         existing.setFullName(updatedUser.getFullName());
@@ -44,21 +38,22 @@ public class UserAccountServiceImpl implements UserAccountService {
         return userAccountRepository.save(existing);
     }
 
+    // ✅ REQUIRED BY INTERFACE
     @Override
-    public UserAccount getUserById(Long id) {
+    public UserAccount getUser(Long id) {
+        return getUserById(id);
+    }
 
-        // ✅ FORCE exception
+    // ✅ USED BY TESTS
+    public UserAccount getUserById(Long id) {
         return userAccountRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     @Override
     public void deactivateUser(Long id) {
-
         UserAccount user = userAccountRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         user.setActive(false);
         userAccountRepository.save(user);
