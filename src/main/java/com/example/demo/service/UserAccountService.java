@@ -5,17 +5,18 @@ import java.util.List;
 
 public interface UserAccountService {
 
+    // Create user
     UserAccount createUser(UserAccount user);
 
+    // Update user by ID
     UserAccount updateUser(Long id, UserAccount user);
 
-    // ❌ WRONG (remove this)
-    // Optional<UserAccount> getUser(Long id);
-
-    // ✅ CORRECT
+    // Get user by ID (must THROW exception if not found)
     UserAccount getUser(Long id);
 
+    // Deactivate user
     void deactivateUser(Long id);
 
+    // Get all users
     List<UserAccount> getAllUsers();
 }

@@ -18,38 +18,36 @@ public class UserAccountServiceImpl implements UserAccountService {
         this.userAccountRepository = userAccountRepository;
     }
 
+    // ================= CREATE =================
     @Override
     public UserAccount createUser(UserAccount user) {
         if (userAccountRepository.existsByEmail(user.getEmail())) {
-            throw new BadRequestException("User with email already exists");
+            throw new BadRequestException("Email already exists");
         }
         user.setActive(true);
         return userAccountRepository.save(user);
     }
 
+    // ================= UPDATE =================
     @Override
-    public UserAccount updateUser(Long id, UserAccount updatedUser) {
+    public UserAccount updateUser(Long id, UserAccount user) {
         UserAccount existing = userAccountRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        existing.setEmail(updatedUser.getEmail());
-        existing.setFullName(updatedUser.getFullName());
+        existing.setEmail(user.getEmail());
+        existing.setFullName(user.getFullName());
 
         return userAccountRepository.save(existing);
     }
 
-    // ✅ REQUIRED BY INTERFACE
+    // ================= GET BY ID =================
     @Override
     public UserAccount getUser(Long id) {
-        return getUserById(id);
-    }
-
-    // ✅ USED BY TESTS
-    public UserAccount getUserById(Long id) {
         return userAccountRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
+    // ================= DEACTIVATE =================
     @Override
     public void deactivateUser(Long id) {
         UserAccount user = userAccountRepository.findById(id)
@@ -59,6 +57,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         userAccountRepository.save(user);
     }
 
+    // ================= GET ALL =================
     @Override
     public List<UserAccount> getAllUsers() {
         return userAccountRepository.findAll();

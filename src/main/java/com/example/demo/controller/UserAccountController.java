@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 public class UserAccountController {
 
     private final UserAccountService userAccountService;
@@ -22,23 +22,25 @@ public class UserAccountController {
     }
 
     @PutMapping("/{id}")
-    public UserAccount updateUser(@PathVariable Long id,
-                                  @RequestBody UserAccount user) {
+    public UserAccount updateUser(
+            @PathVariable Long id,
+            @RequestBody UserAccount user) {
         return userAccountService.updateUser(id, user);
     }
 
+    // 🔧 FIXED HERE
     @GetMapping("/{id}")
     public UserAccount getUser(@PathVariable Long id) {
-        return userAccountService.getUserById(id);
+        return userAccountService.getUser(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deactivateUser(@PathVariable Long id) {
+        userAccountService.deactivateUser(id);
     }
 
     @GetMapping
     public List<UserAccount> getAllUsers() {
         return userAccountService.getAllUsers();
-    }
-
-    @PutMapping("/{id}/deactivate")
-    public void deactivateUser(@PathVariable Long id) {
-        userAccountService.deactivateUser(id);
     }
 }
