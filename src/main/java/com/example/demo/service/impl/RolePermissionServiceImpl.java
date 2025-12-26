@@ -1,14 +1,15 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.RolePermission;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.PermissionRepository;
-import com.example.demo.repository.RolePermissionRepository;
-import com.example.demo.repository.RoleRepository;
-import com.example.demo.service.RolePermissionService;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.example.demo.entity.RolePermission;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.repository.RolePermissionRepository;
+import com.example.demo.repository.RoleRepository;
+import com.example.demo.repository.PermissionRepository;
+import com.example.demo.service.RolePermissionService;
 
 @Service
 public class RolePermissionServiceImpl implements RolePermissionService {
@@ -17,19 +18,16 @@ public class RolePermissionServiceImpl implements RolePermissionService {
     private final RoleRepository roleRepository;
     private final PermissionRepository permissionRepository;
 
-    public RolePermissionServiceImpl(RolePermissionRepository rolePermissionRepository,
-                                     RoleRepository roleRepository,
-                                     PermissionRepository permissionRepository) {
+    public RolePermissionServiceImpl(
+            RolePermissionRepository rolePermissionRepository,
+            RoleRepository roleRepository,
+            PermissionRepository permissionRepository) {
         this.rolePermissionRepository = rolePermissionRepository;
         this.roleRepository = roleRepository;
         this.permissionRepository = permissionRepository;
     }
 
-    @Override
-    public RolePermission grantPermission(RolePermission mapping) {
-        return rolePermissionRepository.save(mapping);
-    }
-
+    // ===== TEST-REQUIRED =====
     @Override
     public List<RolePermission> getPermissionsForRole(Long roleId) {
         return rolePermissionRepository.findByRole_Id(roleId);
@@ -38,13 +36,19 @@ public class RolePermissionServiceImpl implements RolePermissionService {
     @Override
     public RolePermission getMappingById(Long id) {
         return rolePermissionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Mapping not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("RolePermission not found"));
+    }
+
+    // ===== CONTROLLER-REQUIRED (SAFE) =====
+    @Override
+    public RolePermission assignPermission(RolePermission rolePermission) {
+        return rolePermissionRepository.save(rolePermission);
     }
 
     @Override
-    public void revokePermission(Long id) {
+    public void removePermission(Long id) {
         if (!rolePermissionRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Mapping not found");
+            throw new ResourceNotFoundException("RolePermission not found");
         }
         rolePermissionRepository.deleteById(id);
     }

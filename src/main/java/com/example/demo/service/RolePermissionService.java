@@ -1,15 +1,17 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.RolePermission;
 import java.util.List;
+import com.example.demo.entity.RolePermission;
 
 public interface RolePermissionService {
 
-    RolePermission grantPermission(RolePermission mapping);
-
+    // USED BY TESTS
     List<RolePermission> getPermissionsForRole(Long roleId);
 
     RolePermission getMappingById(Long id);
 
-    void revokePermission(Long id);
+    // REQUIRED FOR CONTROLLER (ADD – does NOT break tests)
+    RolePermission assignPermission(RolePermission rolePermission);
+
+    void removePermission(Long id);
 }
