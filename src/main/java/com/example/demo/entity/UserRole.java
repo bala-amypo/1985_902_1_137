@@ -1,25 +1,24 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 public class UserRole {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
-    @ManyToOne
-    private UserAccount user;
+    private LocalDateTime assignedAt;
 
-    @ManyToOne
-    private Role role;
+    public void setId(long id) { this.id = id; }
 
-    public Long getId() { return id; }
+    public void prePersist() {
+        this.assignedAt = LocalDateTime.now();
+    }
 
-    public UserAccount getUser() { return user; }
-    public void setUser(UserAccount user) { this.user = user; }
-
-    public Role getRole() { return role; }
-    public void setRole(Role role) { this.role = role; }
+    public LocalDateTime getAssignedAt() {
+        return assignedAt;
+    }
 }

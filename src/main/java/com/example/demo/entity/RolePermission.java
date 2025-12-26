@@ -1,25 +1,24 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 public class RolePermission {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
-    @ManyToOne
-    private Role role;
+    private LocalDateTime grantedAt;
 
-    @ManyToOne
-    private Permission permission;
+    public void setId(long id) { this.id = id; }
 
-    public Long getId() { return id; }
+    public void prePersist() {
+        this.grantedAt = LocalDateTime.now();
+    }
 
-    public Role getRole() { return role; }
-    public void setRole(Role role) { this.role = role; }
-
-    public Permission getPermission() { return permission; }
-    public void setPermission(Permission permission) { this.permission = permission; }
+    public LocalDateTime getGrantedAt() {
+        return grantedAt;
+    }
 }
