@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/permissions")
-@Tag(name = "Permission Controller")
+@Tag(name = "permission-controller")
 public class PermissionController {
 
     private final PermissionService permissionService;
@@ -24,37 +24,29 @@ public class PermissionController {
         this.permissionService = permissionService;
     }
 
-    // ================= GET =================
     @GetMapping
-    @Operation(
-        summary = "Get all permissions",
-        description = "Fetch all active permissions"
-    )
-    public List<Permission> getAllPermissions(
-        @Parameter(
-            description = "Filter by active status",
-            example = "true"
-        )
-        @RequestParam(required = false) Boolean active
-    ) {
+    @Operation(summary = "Get all permissions")
+    public List<Permission> getAll() {
         return permissionService.getAllPermissions();
     }
 
-    // ================= POST =================
     @PostMapping
     @Operation(
         summary = "Create permission",
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            required = true,
-            description = "Permission object",
-            content = @Content(
-                schema = @Schema(implementation = Permission.class)
-            )
+            content = @Content(schema = @Schema(implementation = Permission.class))
         )
     )
-    public Permission createPermission(
-        @RequestBody Permission permission
-    ) {
+    public Permission create(@RequestBody Permission permission) {
         return permissionService.createPermission(permission);
+    }
+
+    @PutMapping("/{id}/deactivate")
+    @Operation(
+        summary = "Deactivate permission",
+        parameters = @Parameter(name = "id", required = true)
+    )
+    public void deactivate(@PathVariable Long id) {
+        permissionService.deactivatePermission(id);
     }
 }

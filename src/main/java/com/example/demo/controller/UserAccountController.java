@@ -21,20 +21,28 @@ public class UserAccountController {
         this.userAccountService = userAccountService;
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Get user by ID")
-    public UserAccount getUserById(@PathVariable Long id) {
-        return userAccountService.getUserById(id);
-    }
-
     @GetMapping
     @Operation(summary = "Get all users")
     public List<UserAccount> getAllUsers() {
         return userAccountService.getAllUsers();
     }
 
+    @GetMapping("/{id}")
+    @Operation(
+        summary = "Get user by ID",
+        parameters = @Parameter(name = "id", required = true)
+    )
+    public UserAccount getUserById(@PathVariable Long id) {
+        return userAccountService.getUserById(id);
+    }
+
     @PostMapping
-    @Operation(summary = "Create user")
+    @Operation(
+        summary = "Create user",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = @Content(schema = @Schema(implementation = UserAccount.class))
+        )
+    )
     public UserAccount createUser(@RequestBody UserAccount user) {
         return userAccountService.createUser(user);
     }
