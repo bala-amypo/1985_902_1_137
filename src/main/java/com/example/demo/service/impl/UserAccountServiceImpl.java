@@ -1,66 +1,61 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.UserAccount;
+import com.example.demo.exception.BadRequestException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.service.UserAccountService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserAccountServiceImpl implements UserAccountService {
 
-    private final UserAccountRepository repository;
+    private final UserAccountRepository userAccountRepository;
 
-    // Required by Spring
-    public UserAccountServiceImpl() {
-        this.repository = null;
-    }
-
-    // Required by test cases
-    public UserAccountServiceImpl(UserAccountRepository repository) {
-        this.repository = repository;
+    public UserAccountServiceImpl(UserAccountRepository userAccountRepository) {
+        this.userAccountRepository = userAccountRepository;
     }
 
     @Override
     public UserAccount createUser(UserAccount user) {
-        return repository.save(user);
-    }
-
-    @Override
-    public Optional<UserAccount> getUser(Long id) {
-        return repository.findById(id);
-    }
-
-    @Override
-    public UserAccount getUserById(Long id) {
-        return repository.findById(id).orElse(null);
+        if (userAccountRepository.existsByEmail(user.getEmail())) {
+            throw new BadRequestException("Email already exists");
+        }
+        user.setActive(true);
+        return userAccountRepository.save(user);
     }
 
     @Override
     public UserAccount updateUser(Long id, UserAccount updatedUser) {
-        UserAccount existing = repository.findById(id).orElse(null);
-        if (existing == null) {
-            return null;
-        }
+        UserAccount existing = userAccountRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found"));
 
-        existing.setFullName(updatedUser.getFullName());
         existing.setEmail(updatedUser.getEmail());
-        return repository.save(existing);
+        existing.setFullName(updatedUser.getFullName());
+        return userAccountRepository.save(existing);
+    }
+
+    @Override
+    public UserAccount getUserById(Long id) {
+        return userAccountRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found"));
     }
 
     @Override
     public void deactivateUser(Long id) {
-        UserAccount user = repository.findById(id).orElse(null);
-        if (user != null) {
-            user.setActive(false);
-            repository.save(user);
-        }
+        UserAccount user = userAccountRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found"));
+        user.setActive(false);
+        userAccountRepository.save(user);
     }
 
     @Override
     public List<UserAccount> getAllUsers() {
-        return repository.findAll();
+        return userAccountRepository.findAll();
     }
 }
