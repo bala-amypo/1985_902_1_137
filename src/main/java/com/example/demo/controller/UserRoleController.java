@@ -2,17 +2,17 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.*;
+
 import com.example.demo.entity.UserRole;
 import com.example.demo.service.UserRoleService;
-
-import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/user-roles")
-@Tag(name = "user-role-controller")
+@Tag(name = "User Roles")
 public class UserRoleController {
 
     private final UserRoleService userRoleService;
@@ -28,7 +28,7 @@ public class UserRoleController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get user-role mapping by ID")
+    @Operation(summary = "Get user-role mapping by id")
     public UserRole getById(@PathVariable Long id) {
         return userRoleService.getMappingById(id);
     }

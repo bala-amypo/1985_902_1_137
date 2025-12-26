@@ -1,11 +1,11 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.UserRole;
 import java.util.List;
+import com.example.demo.entity.UserRole;
 
 public interface UserRoleService {
 
-    UserRole assignRole(UserRole mapping);
+    UserRole assignRole(UserRole userRole);
 
     List<UserRole> getRolesForUser(Long userId);
 
