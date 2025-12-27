@@ -5,6 +5,8 @@ import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.service.UserAccountService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserAccountServiceImpl implements UserAccountService {
 
@@ -14,7 +16,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         this.repository = repository;
     }
 
-    // EXISTING METHODS (KEEP AS IS)
+    // EXISTING
     @Override
     public UserAccount createUser(UserAccount user) {
         return repository.save(user);
@@ -40,7 +42,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         repository.deleteById(id);
     }
 
-    // ✅ NEW METHODS (SAFE)
+    // AUTH
     @Override
     public UserAccount register(UserAccount user) {
         return repository.save(user);
@@ -50,5 +52,18 @@ public class UserAccountServiceImpl implements UserAccountService {
     public UserAccount login(String email, String password) {
         return repository.findByEmailAndPassword(email, password)
                 .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+    }
+
+    // ✅ NEW (FOR CONTROLLER)
+    @Override
+    public List<UserAccount> getAllUsers() {
+        return repository.findAll();
+    }
+
+    @Override
+    public void deactivateUser(Long id) {
+        UserAccount user = getUserById(id);
+        user.setActive(false);   // assumes `active` field exists
+        repository.save(user);
     }
 }
