@@ -1,6 +1,8 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.UserAccount;
+import com.example.demo.exception.BadRequestException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.service.UserAccountService;
 import org.springframework.stereotype.Service;
@@ -22,9 +24,9 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     public UserAccount createUser(UserAccount user) {
 
-        // ✅ FIX: duplicate email check (t12)
+        // ✅ t12_createUser_duplicateEmail
         if (repository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new BadRequestException("Email already exists");
         }
 
         return repository.save(user);
@@ -36,8 +38,9 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     public UserAccount updateUser(Long id, UserAccount user) {
 
-        // ✅ FIX: throws if not found (t14)
-        UserAccount existing = getUserById(id);
+        // ✅ t14_updateUser_notFound
+        UserAccount existing = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         existing.setEmail(user.getEmail());
         existing.setFullName(user.getFullName());
@@ -53,9 +56,9 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     public UserAccount getUserById(Long id) {
 
-        // ✅ FIX: throws if not found (t16)
+        // ✅ t16_getUserById_notFound
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     // =========================
@@ -63,8 +66,6 @@ public class UserAccountServiceImpl implements UserAccountService {
     // =========================
     @Override
     public void deleteUser(Long id) {
-
-        // ensure not-found throws
         getUserById(id);
         repository.deleteById(id);
     }
@@ -75,9 +76,8 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     public UserAccount register(UserAccount user) {
 
-        // reuse duplicate email logic
         if (repository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new BadRequestException("Email already exists");
         }
 
         return repository.save(user);
@@ -89,12 +89,11 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     public UserAccount login(String email, String password) {
 
-        // safer than email+password query
         UserAccount user = repository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         if (!user.getPassword().equals(password)) {
-            throw new RuntimeException("Invalid credentials");
+            throw new BadRequestException("Invalid credentials");
         }
 
         return user;
@@ -113,7 +112,6 @@ public class UserAccountServiceImpl implements UserAccountService {
     // =========================
     @Override
     public void deactivateUser(Long id) {
-
         UserAccount user = getUserById(id);
         user.setActive(false);
         repository.save(user);
